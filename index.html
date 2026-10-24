@@ -34,7 +34,7 @@
   @media (prefers-reduced-motion:reduce){.grain{animation:none}}
 
   /* ---------- background video ---------- */
-  /* grayscale + brightness(.5) + contrast(1.2) are baked into assets/bg.mp4, so no live CSS filter here */
+  /* Video is served from the repository root beside index.html. */
   #bgvid{position:fixed;inset:0;z-index:0;width:100%;height:100%;object-fit:cover;pointer-events:none}
   .bg-veil{position:fixed;inset:0;z-index:1;pointer-events:none;
     background:radial-gradient(ellipse at 50% 42%,rgba(8,8,8,.15) 0%,rgba(8,8,8,.78) 78%),
@@ -205,8 +205,8 @@
   <div id="loadPct">0%</div>
 </div>
 
-<video id="bgvid" autoplay muted loop playsinline preload="auto" disablepictureinpicture disableremoteplayback poster="assets/bg.jpg">
-  <source src="assets/bg.mp4" type="video/mp4">
+<video id="bgvid" autoplay muted loop playsinline webkit-playsinline preload="auto" disablepictureinpicture disableremoteplayback poster="./bg.jpg" aria-hidden="true">
+  <source src="./bg.mp4" type="video/mp4">
 </video>
 <div class="bg-veil"></div>
 <div class="grain"></div>
@@ -466,11 +466,42 @@ setTimeout(() => markParts.forEach(p => p.style.strokeDashoffset = 0), 4500);
 
 /* ================= BG VIDEO: keep it playing ================= */
 const bgv = document.getElementById('bgvid');
-/* only decode the video when it is actually visible (not in catalog view, not in a hidden tab) */
+/* GitHub Pages: keep bg.mp4 and bg.jpg in the same repository folder as index.html.
+   Muted inline playback is the most compatible setup for browser autoplay. */
+bgv.muted = true;
+bgv.defaultMuted = true;
+bgv.loop = true;
+bgv.playsInline = true;
+bgv.addEventListener('error', () => {
+  const mediaError = bgv.error;
+  console.error('Background video failed to load/play. Confirm the repository root contains bg.mp4 and that it is a real H.264 MP4 (not a Git LFS pointer).', {
+    source: bgv.currentSrc || './bg.mp4',
+    code: mediaError ? mediaError.code : 'unknown',
+    message: mediaError ? mediaError.message : 'No media error details available'
+  });
+});
+bgv.addEventListener('loadeddata', () => bgv.classList.add('video-ready'));
+function startBackgroundVideo(){
+  if (document.hidden || document.body.classList.contains('view-comp')) return;
+  const playAttempt = bgv.play();
+  if (playAttempt && typeof playAttempt.catch === 'function') {
+    playAttempt.catch(err => console.warn('Browser blocked background video autoplay; it will retry on the next interaction.', err));
+  }
+}
+/* Start on page load, retry after metadata loads and on the first user interaction. */
+bgv.addEventListener('loadedmetadata', startBackgroundVideo);
+bgv.addEventListener('canplay', startBackgroundVideo);
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', startBackgroundVideo, { once: true });
+} else {
+  startBackgroundVideo();
+}
 function syncVid(){
-  const off = document.hidden || document.body.classList.contains('view-comp');
-  if (off){ if (!bgv.paused) bgv.pause(); }
-  else if (bgv.paused) bgv.play().catch(() => {});
+  if (document.hidden || document.body.classList.contains('view-comp')) {
+    if (!bgv.paused) bgv.pause();
+  } else {
+    startBackgroundVideo();
+  }
 }
 document.addEventListener('pointerdown', syncVid);
 document.addEventListener('visibilitychange', syncVid);
