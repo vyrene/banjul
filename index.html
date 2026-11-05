@@ -3,7 +3,54 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Banjul Music Group — Pz'</title>
+<title>Banjul Music Group (BMG) — Home of Pz&prime;</title>
+<meta name="description" content="Banjul Music Group (BMG) — independent record label, home of recording artist Pz′. Catalog incl. No Turning Back, B4NTB, Havana, HEDIS BUSSIN′. No genre. No face. No turning back.">
+<meta name="robots" content="index,follow,max-image-preview:large">
+<link rel="canonical" href="https://vyrene.github.io/banjul/">
+<meta name="theme-color" content="#080808">
+
+<!-- link previews (iMessage / Discord / X / IG) -->
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Banjul Music Group">
+<meta property="og:title" content="Banjul Music Group (BMG) — Home of Pz′">
+<meta property="og:description" content="Independent record label. Home of Pz′ — No Turning Back, B4NTB, Havana. No genre. No face. No turning back.">
+<meta property="og:url" content="https://vyrene.github.io/banjul/">
+<meta property="og:image" content="https://vyrene.github.io/banjul/bg.jpg"><!-- bg.jpg already exists in the repo. swap for a real 1200x630 cover later if you want a cleaner link preview -->
+<meta name="twitter:card" content="summary_large_image">
+
+<!-- structured data: teaches Google "Banjul Music Group" and "Pz′" as entities, ties them together -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "MusicGroup",
+      "@id": "https://vyrene.github.io/banjul/#label",
+      "name": "Banjul Music Group",
+      "alternateName": ["BMG", "Banjul Music", "Banjul Records"],
+      "url": "https://vyrene.github.io/banjul/",
+      "description": "Independent record label. Home of recording artist Pz′.",
+      "email": "contact@banjul.org",
+      "sameAs": ["https://instagram.com/banjulmusic"],
+      "member": [{ "@id": "https://vyrene.github.io/banjul/#pz" }]
+    },
+    {
+      "@type": "MusicGroup",
+      "@id": "https://vyrene.github.io/banjul/#pz",
+      "name": "Pz′",
+      "alternateName": ["Pz", "PZ", "Pz'", "Papayusupha Goree Njie", "Papayusupha Njie"],
+      "description": "Rapper and model from Atlanta, of Gambian and Senegalese descent. Signed to Banjul Music Group.",
+      "url": "https://vyrene.github.io/banjul/#about",
+      "memberOf": { "@id": "https://vyrene.github.io/banjul/#label" },
+      "album": [
+        { "@type": "MusicAlbum", "name": "No Turning Back", "datePublished": "2026-06" },
+        { "@type": "MusicAlbum", "name": "B4NTB", "datePublished": "2026-06" },
+        { "@type": "MusicAlbum", "name": "Havana", "datePublished": "2026-01" }
+      ]
+    }
+  ]
+}
+</script>
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><path d='M42 10h16v32h32v16H58v32H42V58H10V42h32z' fill='white'/></svg>">
 <style>
   :root{
@@ -35,10 +82,12 @@
 
   /* ---------- background video ---------- */
   /* Video is served from the repository root beside index.html. */
-  #bgvid{position:fixed;inset:0;z-index:0;width:100%;height:100%;object-fit:cover;pointer-events:none}
+  #bgvid{position:fixed;inset:0;z-index:0;width:100%;height:100%;object-fit:cover;pointer-events:none;
+    filter:brightness(1.3) contrast(1.06);background:#050505}
   .bg-veil{position:fixed;inset:0;z-index:1;pointer-events:none;
-    background:radial-gradient(ellipse at 50% 42%,rgba(8,8,8,.15) 0%,rgba(8,8,8,.78) 78%),
-               linear-gradient(to bottom,rgba(8,8,8,.55),rgba(8,8,8,.25) 40%,rgba(8,8,8,.85))}
+    /* Keep the moody look without burying the actual footage under a nearly opaque overlay. */
+    background:radial-gradient(ellipse at 50% 42%,rgba(8,8,8,.04) 0%,rgba(8,8,8,.30) 78%),
+               linear-gradient(to bottom,rgba(8,8,8,.18),rgba(8,8,8,.08) 40%,rgba(8,8,8,.38))}
   body.view-comp #bgvid,body.view-comp .bg-veil{display:none}
 
   /* ---------- preloader: cycles fonts ---------- */
@@ -207,6 +256,7 @@
 
 <video id="bgvid" autoplay muted loop playsinline webkit-playsinline preload="auto" disablepictureinpicture disableremoteplayback poster="./bg.jpg" aria-hidden="true">
   <source src="./bg.mp4" type="video/mp4">
+  Your browser could not load the background video.
 </video>
 <div class="bg-veil"></div>
 <div class="grain"></div>
@@ -275,6 +325,15 @@
       <span class="sec-count" id="catCount"></span>
     </div>
     <div class="grid" id="grid"></div>
+    <!-- catalog grid is JS-rendered; googlebot may never execute it on a new domain.
+         this static list guarantees release names are crawlable either way. -->
+    <noscript>
+      <p style="font-family:ui-monospace,monospace;font-size:11px;letter-spacing:.2em;color:#8a8a8a;line-height:2.2;text-transform:uppercase">
+        Pz′ on Banjul Music Group — releases: No Turning Back · B4NTB · Havana · HEDIS BUSSIN′ ·
+        Sweeping The Streets · Resurrection · Intercontinental · Durango · Bad Boys ·
+        First Date · Vienna · All Of Me · Fantastic 5 · Extra (Extra) · CHECK CLEARED* · CØVER GIRL $WAG
+      </p>
+    </noscript>
   </section>
 
   <div class="marquee" aria-label="Banjul Music Group catalog divider"><span class="marquee-inner"></span></div>
@@ -475,7 +534,7 @@ bgv.playsInline = true;
 bgv.addEventListener('error', () => {
   const mediaError = bgv.error;
   console.error('Background video failed to load/play. Confirm the repository root contains bg.mp4 and that it is a real H.264 MP4 (not a Git LFS pointer).', {
-    source: bgv.currentSrc || './bg.mp4',
+    source: bgv.currentSrc || new URL('./bg.mp4', window.location.href).href,
     code: mediaError ? mediaError.code : 'unknown',
     message: mediaError ? mediaError.message : 'No media error details available'
   });
